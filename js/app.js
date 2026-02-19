@@ -80,9 +80,8 @@ function showPage(page, param) {
             break;
     }
 
-    // Scroll main content to top on page change
-    const main = document.getElementById('main-content');
-    if (main) main.scrollTop = 0;
+    // Scroll to top on page change
+    window.scrollTo(0, 0);
 }
 
 // ============================================

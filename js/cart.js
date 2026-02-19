@@ -31,6 +31,7 @@ function saveCart() {
     } catch (e) {
         // Silently fail if localStorage is unavailable
     }
+    updateCartBadge();
 }
 
 // ============================================
@@ -221,3 +222,50 @@ function handleCartRemove(productId) {
     removeFromCart(productId);
     renderCartPage();
 }
+
+// ============================================
+// Cart Badge
+// ============================================
+
+/**
+ * Update the cart item count badge in the sidebar navigation
+ */
+function updateCartBadge() {
+    const badge = document.getElementById('cart-badge');
+    if (!badge) return;
+
+    const count = getCartItemCount();
+    if (count > 0) {
+        badge.textContent = count > 99 ? '99+' : count;
+        badge.classList.remove('hidden');
+    } else {
+        badge.classList.add('hidden');
+    }
+}
+
+// ============================================
+// Toast Notifications
+// ============================================
+
+/**
+ * Show a brief toast notification
+ * @param {string} message - Message to display
+ * @param {string} [emoji='✓'] - Emoji icon prefix
+ */
+function showToast(message, emoji = '✓') {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `<span>${emoji}</span> ${message}`;
+    container.appendChild(toast);
+
+    // Auto-remove after animation
+    setTimeout(() => {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+    }, 2500);
+}
+
+// Initialize badge on load
+document.addEventListener('DOMContentLoaded', updateCartBadge);

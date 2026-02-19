@@ -19,15 +19,7 @@ function renderCheckoutPage() {
 
     // If cart is empty, redirect to cart page
     if (items.length === 0) {
-        container.innerHTML = `
-            <div class="cart-empty">
-                <div class="empty-icon">📋</div>
-                <p>Nothing to check out — your cart is empty.</p>
-                <button class="btn btn-primary" onclick="navigateTo('products')" aria-label="Go Shopping">
-                    Go Shopping
-                </button>
-            </div>
-        `;
+        navigateTo('cart');
         return;
     }
 
@@ -81,24 +73,72 @@ function renderCheckoutPage() {
 // ============================================
 
 /**
- * Process the order — clears the cart and shows success message
+ * Process the order — shows confirmation dialog first
  */
 function processOrder() {
-    clearCart();
+    showConfirmDialog(
+        'Confirm Order',
+        'Are you sure you want to place this order?',
+        function () {
+            clearCart();
 
-    const container = document.getElementById('checkout-content');
-    if (!container) return;
+            const container = document.getElementById('checkout-content');
+            if (!container) return;
 
-    container.innerHTML = `
-        <div class="order-success">
-            <div class="success-icon">✅</div>
-            <h2>Order Placed Successfully!</h2>
-            <p>Thank you for your purchase. Your fresh fruits are on the way!</p>
-            <button class="btn btn-primary" 
-                    onclick="navigateTo('products')" 
-                    aria-label="Continue Shopping">
-                Continue Shopping
-            </button>
+            container.innerHTML = `
+                <div class="order-success">
+                    <div class="success-icon">✅</div>
+                    <h2>Order Placed Successfully!</h2>
+                    <p>Thank you for your purchase. Your fresh fruits are on the way!</p>
+                    <button class="btn btn-primary" 
+                            onclick="navigateTo('products')" 
+                            aria-label="Continue Shopping">
+                        Continue Shopping
+                    </button>
+                </div>
+            `;
+        }
+    );
+}
+
+/**
+ * Show a confirmation dialog overlay
+ * @param {string} title - Dialog title
+ * @param {string} message - Dialog message
+ * @param {Function} onConfirm - Callback when confirmed
+ */
+function showConfirmDialog(title, message, onConfirm) {
+    // Remove any existing overlay
+    const existing = document.querySelector('.confirm-overlay');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.className = 'confirm-overlay';
+    overlay.innerHTML = `
+        <div class="confirm-dialog">
+            <h3>${title}</h3>
+            <p>${message}</p>
+            <div class="confirm-actions">
+                <button class="btn btn-secondary" id="confirm-cancel" aria-label="Cancel">Cancel</button>
+                <button class="btn btn-primary" id="confirm-ok" aria-label="Confirm">Confirm</button>
+            </div>
         </div>
     `;
+    document.body.appendChild(overlay);
+
+    // Handle cancel
+    overlay.querySelector('#confirm-cancel').addEventListener('click', function () {
+        overlay.remove();
+    });
+
+    // Handle click outside dialog
+    overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) overlay.remove();
+    });
+
+    // Handle confirm
+    overlay.querySelector('#confirm-ok').addEventListener('click', function () {
+        overlay.remove();
+        onConfirm();
+    });
 }

@@ -187,12 +187,18 @@ function changeCardQty(productId, delta) {
 function addToCartFromCard(productId) {
     const qtyEl = document.getElementById(`qty-${productId}`);
     const qty = qtyEl ? parseInt(qtyEl.textContent, 10) : 1;
+    const product = getProductById(productId);
     addToCart(productId, qty);
 
     // Reset the card quantity back to 1
     if (qtyEl) qtyEl.textContent = '1';
 
-    // Brief visual feedback
+    // Toast notification
+    if (product) {
+        showToast(`${product.emoji} ${product.name} × ${qty} added to cart`);
+    }
+
+    // Brief visual feedback on button
     const card = document.querySelector(`.product-card[data-product-id="${productId}"] .btn-primary`);
     if (card) {
         const originalText = card.textContent;
@@ -223,9 +229,12 @@ function renderProductDetail(productId) {
 
     if (!product) {
         container.innerHTML = `
-            <div style="text-align:center; padding:40px;">
-                <p>Product not found.</p>
-                <a href="#products" class="back-link">← Back to Products</a>
+            <div class="no-product-selected">
+                <div class="empty-icon">📌</div>
+                <p>Please select a product to view its details.</p>
+                <button class="btn btn-primary" onclick="navigateTo('products')" aria-label="Browse Products">
+                    Browse Products
+                </button>
             </div>
         `;
         return;
@@ -239,6 +248,70 @@ function renderProductDetail(productId) {
             <h2>${product.name}</h2>
             <div class="detail-price">${formatPrice(product.price)} ${product.unit}</div>
             <p class="detail-description">${product.description}</p>
+            <div class="detail-cart-section">
+                <div class="qty-selector">
+                    <label>Qty:</label>
+                    <button class="qty-btn" 
+                            onclick="changeDetailQty(-1)" 
+                            aria-label="Decrease quantity">−</button>
+                    <span class="qty-value" id="detail-qty">1</span>
+                    <button class="qty-btn" 
+                            onclick="changeDetailQty(1)" 
+                            aria-label="Increase quantity">+</button>
+                </div>
+                <button class="btn btn-primary" 
+                        id="detail-add-btn"
+                        onclick="addToCartFromDetail(${product.id})"
+                        aria-label="Add ${product.name} to cart">
+                    Add to Cart 🛒
+                </button>
+            </div>
         </div>
     `;
+}
+
+/**
+ * Change quantity on the product detail page
+ * @param {number} delta - Change amount (+1 or -1)
+ */
+function changeDetailQty(delta) {
+    const qtyEl = document.getElementById('detail-qty');
+    if (!qtyEl) return;
+
+    let qty = parseInt(qtyEl.textContent, 10) + delta;
+    qty = Math.max(1, Math.min(10, qty));
+    qtyEl.textContent = qty;
+}
+
+/**
+ * Add to cart from the product detail page
+ * @param {number} productId - Product ID
+ */
+function addToCartFromDetail(productId) {
+    const qtyEl = document.getElementById('detail-qty');
+    const qty = qtyEl ? parseInt(qtyEl.textContent, 10) : 1;
+    const product = getProductById(productId);
+    addToCart(productId, qty);
+
+    // Reset qty back to 1
+    if (qtyEl) qtyEl.textContent = '1';
+
+    // Toast notification
+    if (product) {
+        showToast(`${product.emoji} ${product.name} × ${qty} added to cart`);
+    }
+
+    // Button feedback
+    const btn = document.getElementById('detail-add-btn');
+    if (btn) {
+        const originalText = btn.textContent;
+        btn.textContent = '✓ Added!';
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-success');
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-primary');
+        }, 800);
+    }
 }
