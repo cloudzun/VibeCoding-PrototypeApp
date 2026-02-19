@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍊 Fruit Store — VibeCoding Prototype</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Left-side Navigation Menu -->
+    <nav id="sidebar" class="sidebar" aria-label="Main navigation">
+        <div class="sidebar-logo">
+            <a href="#products" aria-label="Go to Products page">
+                <span class="logo-emoji">🍊</span>
+                <span class="logo-text">Fruit Store</span>
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li>
+                <a href="#products" class="nav-item active" data-page="products" aria-label="Products">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-label">Products</span>
+                    <span class="nav-abbr">Pr</span>
+                </a>
+            </li>
+            <li>
+                <a href="#product-detail" class="nav-item" data-page="product-detail" aria-label="Product Details">
+                    <span class="nav-icon">📄</span>
+                    <span class="nav-label">ProductDetails</span>
+                    <span class="nav-abbr">PD</span>
+                </a>
+            </li>
+            <li>
+                <a href="#cart" class="nav-item" data-page="cart" aria-label="Shopping Cart">
+                    <span class="nav-icon">🧺</span>
+                    <span class="nav-label">ShoppingCart</span>
+                    <span class="nav-abbr">SC</span>
+                </a>
+            </li>
+            <li>
+                <a href="#checkout" class="nav-item" data-page="checkout" aria-label="Checkout">
+                    <span class="nav-icon">💳</span>
+                    <span class="nav-label">Checkout</span>
+                    <span class="nav-abbr">Co</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="main-content">
+        <!-- Products Page -->
+        <section id="page-products" class="page" aria-label="Products page">
+            <h1 class="page-title">Products</h1>
+            <div id="products-grid" class="products-grid">
+                <!-- Product cards rendered by JS -->
+            </div>
+        </section>
+
+        <!-- Product Details Page -->
+        <section id="page-product-detail" class="page hidden" aria-label="Product Details page">
+            <a href="#products" class="back-link" aria-label="Back to Products">← Back to Products</a>
+            <div id="product-detail-content" class="product-detail-content">
+                <!-- Product detail rendered by JS -->
+            </div>
+        </section>
+
+        <!-- Shopping Cart Page -->
+        <section id="page-cart" class="page hidden" aria-label="Shopping Cart page">
+            <h1 class="page-title">Shopping Cart</h1>
+            <div id="cart-content" class="cart-content">
+                <!-- Cart items rendered by JS -->
+            </div>
+        </section>
+
+        <!-- Checkout Page -->
+        <section id="page-checkout" class="page hidden" aria-label="Checkout page">
+            <h1 class="page-title">Checkout</h1>
+            <div id="checkout-content" class="checkout-content">
+                <!-- Checkout content rendered by JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Scripts -->
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/checkout.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
